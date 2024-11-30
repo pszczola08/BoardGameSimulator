@@ -1,0 +1,14 @@
+C:\Lekcje\Zadania\PAD\Zadanie 2\bin\Debug\net9.0\Zadanie 2.exe
+C:\Lekcje\Zadania\PAD\Zadanie 2\bin\Debug\net9.0\Zadanie 2.deps.json
+C:\Lekcje\Zadania\PAD\Zadanie 2\bin\Debug\net9.0\Zadanie 2.runtimeconfig.json
+C:\Lekcje\Zadania\PAD\Zadanie 2\bin\Debug\net9.0\Zadanie 2.dll
+C:\Lekcje\Zadania\PAD\Zadanie 2\bin\Debug\net9.0\Zadanie 2.pdb
+C:\Lekcje\Zadania\PAD\Zadanie 2\obj\Debug\net9.0\Zadanie 2.GeneratedMSBuildEditorConfig.editorconfig
+C:\Lekcje\Zadania\PAD\Zadanie 2\obj\Debug\net9.0\Zadanie 2.AssemblyInfoInputs.cache
+C:\Lekcje\Zadania\PAD\Zadanie 2\obj\Debug\net9.0\Zadanie 2.AssemblyInfo.cs
+C:\Lekcje\Zadania\PAD\Zadanie 2\obj\Debug\net9.0\Zadanie 2.csproj.CoreCompileInputs.cache
+C:\Lekcje\Zadania\PAD\Zadanie 2\obj\Debug\net9.0\Zadanie 2.dll
+C:\Lekcje\Zadania\PAD\Zadanie 2\obj\Debug\net9.0\refint\Zadanie 2.dll
+C:\Lekcje\Zadania\PAD\Zadanie 2\obj\Debug\net9.0\Zadanie 2.pdb
+C:\Lekcje\Zadania\PAD\Zadanie 2\obj\Debug\net9.0\Zadanie 2.genruntimeconfig.cache
+C:\Lekcje\Zadania\PAD\Zadanie 2\obj\Debug\net9.0\ref\Zadanie 2.dll
