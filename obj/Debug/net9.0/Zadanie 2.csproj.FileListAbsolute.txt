@@ -12,3 +12,4 @@ C:\Lekcje\Zadania\PAD\Zadanie 2\obj\Debug\net9.0\refint\Zadanie 2.dll
 C:\Lekcje\Zadania\PAD\Zadanie 2\obj\Debug\net9.0\Zadanie 2.pdb
 C:\Lekcje\Zadania\PAD\Zadanie 2\obj\Debug\net9.0\Zadanie 2.genruntimeconfig.cache
 C:\Lekcje\Zadania\PAD\Zadanie 2\obj\Debug\net9.0\ref\Zadanie 2.dll
+C:\Lekcje\Zadania\PAD\Zadanie 2\obj\Debug\net9.0\Zadanie 2.sourcelink.json
