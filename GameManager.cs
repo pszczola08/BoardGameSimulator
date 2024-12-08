@@ -67,22 +67,27 @@ public class NewGame {
                 if(AbilityName == "Attack" || AbilityName == "Shield") {
                     Ability = CurrentPlayer.Abilities[AbilityName];
                 } else {
-                    Ability = Convert.ToDouble(CurrentPlayer.SuperAbilities[1]);
+                    Ability = Convert.ToDouble(CurrentPlayer.SuperAbilities[2]);
                 }
 
                 Random aa = new();
                 double bb = Math.Round(aa.NextDouble() * (1.0 - 0.1) + 0.1, 1);
                 double dd;
+                object FullName;
                 if(AbilityName == "Attack" || AbilityName == "Shield") {
                     dd = Math.Round(bb + Ability, 1);
                     CurrentPlayer.Abilities[AbilityName] += bb;
+                    FullName = AbilityName;
                 } else {
                     double cc = Math.Round(Ability + bb, 1);
                     object ccc = cc;
                     dd = cc;
-                    CurrentPlayer.SuperAbilities[1] = ccc;
+                    CurrentPlayer.SuperAbilities[2] = ccc;
+                    FullName = CurrentPlayer.SuperAbilities[1];
                 }
-                Console.WriteLine($"Ability {AbilityName} upgraded from {Ability} to {dd}");
+                Console.WriteLine($"Ability {FullName} upgraded from {Ability} to {dd}");
+                
+                
             }
             
             
