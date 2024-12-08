@@ -2,19 +2,19 @@
 
 class Player { 
     public string Name;
-    public int Position;
-    public string Type;
+    public int Position; // aktualna pozycja gracza
+    public string Type; // typ gracza
     public double Points;
-    private double _Health;
+    private double _Health; // prywatne pole zdrowie (jak robiłem publiczne, to nie mogłem zrobić customowego get i set)
 
     public double Health {
-        get { return Math.Round(_Health, 1); }
-        set { _Health = Math.Round(_Health, 1); }
+        get { return Math.Round(_Health, 1); } // zaokrąglanie zdrowia
+        set { _Health = Math.Round(_Health, 1); } // i tu też
     }
-    public ConsoleColor Color;
-    public Dictionary<string, double> Abilities;
-    public List<object> SuperAbilities;
-    public static List<Player> Players { get; set; } = new();
+    public ConsoleColor Color; // fajny kolorek
+    public Dictionary<string, double> Abilities; // umiejętności
+    public List<object> SuperAbilities; // lepsze umiejętności
+    public static List<Player> Players { get; set; } = new(); // statyczne pole, czyli nie jest polem obiektu tylko jedno dla klasy całej; jest to lista graczy
 
     public Player(string Name) {
         this.Name = Name;
@@ -23,8 +23,8 @@ class Player {
         _Health = 100;
         
         Random col = new Random();
-        Array colors = Enum.GetValues(typeof(ConsoleColor));
-        Color = (ConsoleColor)colors.GetValue(col.Next(colors.Length));
+        Array colors = Enum.GetValues(typeof(ConsoleColor)); // pobiera wszystkie istniejące kolory konsoli
+        Color = (ConsoleColor)colors.GetValue(col.Next(colors.Length)); // ustawia kolor
         
         Random rand = new();
         int Rnd = rand.Next(1, 6);
@@ -83,9 +83,9 @@ class Player {
         Console.WriteLine($"Player {this.Name} ({Type}) was added!");
     }
 
-    public delegate void UpdatePlayer(double number, string addOrRemove);
+    public delegate void UpdatePlayer(double number, string addOrRemove); // definicja delegata (nienawidzę delegatów)
 
-    public void UpdatePoints(double number, string addOrRemove) {
+    public void UpdatePoints(double number, string addOrRemove) { // metoda uaktualniająca punkty
         if (addOrRemove == "add") {
             Points += number;
         } else if (addOrRemove == "remove") {
@@ -94,7 +94,7 @@ class Player {
             Console.WriteLine($"\n ---------- \n Error! Cannot execute action \" {addOrRemove} \" on Player! \n ---------- \n");
         }
     }
-    public void UpdateHealth(double number, string addOrRemove) {
+    public void UpdateHealth(double number, string addOrRemove) { // metoda aktualizująca zdrowie
         if (addOrRemove == "add") {
             _Health += number;
         } else if (addOrRemove == "remove") {
@@ -109,7 +109,7 @@ class Player {
         }
     }
 
-    public static List<string> GetPlayersByPosition(int min, int max) {
+    public static List<string> GetPlayersByPosition(int min, int max) { // statyczna metoda (czyli dla klasy, a nie obiektu), która pobiera graczy w danym zakresie pól
         List<string> names = new();
         foreach (var x in Players) {
             if (x.Position >= min && x.Position <= max) {
@@ -120,7 +120,7 @@ class Player {
         return names;
     }
 
-    public static List<string> GetAllPlayers() {
+    public static List<string> GetAllPlayers() { // metoda pobierająca wszystkich graczy
         List<string> names = new();
         foreach (var x in Players) {
             names.Add(x.Name);

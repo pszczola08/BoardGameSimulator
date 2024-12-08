@@ -4,11 +4,11 @@ using PlayerCreator;
 namespace GameManager;
 
 public class NewGame {
-    public void Start(int Fields, int BonusFieldsPercentage) {
+    public void Start(int Fields, int BonusFieldsPercentage) { // metoda startująca grę
         
-        Board board = new(Fields, BonusFieldsPercentage);
+        Board board = new(Fields, BonusFieldsPercentage); // stworzenie nowego obiektu klasy Board
         bool finish = false;
-        while (finish != true) {
+        while (finish != true) { // pętla dodająca graczy
             Console.Write("Player's name: ");
             string? name = Console.ReadLine();
             if (!Player.Players.Any(p => p.Name == name)) {
@@ -29,17 +29,17 @@ public class NewGame {
         bool win = false;
         string winner = "";
         int current = 0;
-        while (win != true) {
-            if (current > Player.Players.Count - 1) {
+        while (win != true) { // pętla tur graczy; kluczowy element programu; kończy się w momencie, gdy zostanie jeden gracz
+            if (current > Player.Players.Count - 1) { // jeśli zmienna przechowująca indeks obecnego gracza wykracza poza tablicę, jest ustawiana na 0 (dzięki temu po turze gracza ostatniego będzie tura gracza pierwszego)
                  current = 0;
             }
             
-            Player CurrentPlayer = Player.Players[current];
+            Player CurrentPlayer = Player.Players[current]; // pobiera obecnego gracza
             
-            List<string> AllPlayers = Player.GetAllPlayers();
-            List<string> PlayersExceptYou = AllPlayers.FindAll(pl0 => pl0 != CurrentPlayer.Name);
+            List<string> AllPlayers = Player.GetAllPlayers(); // lista wszystkich imion graczy
+            List<string> PlayersExceptYou = AllPlayers.FindAll(pl0 => pl0 != CurrentPlayer.Name); // lista wszystkich imiomn graczy poza samym sobą
             
-            Console.ForegroundColor = CurrentPlayer.Color;
+            Console.ForegroundColor = CurrentPlayer.Color; // zmiana koloru tekstu w konsoli
             Console.WriteLine($"{CurrentPlayer.Name}'s turn!");
             Console.WriteLine($"Type: {CurrentPlayer.Type}; Points: {CurrentPlayer.Points}; Helath: {CurrentPlayer.Health}; Attack: {CurrentPlayer.Abilities["Attack"]}; Shield: {CurrentPlayer.Abilities["Shield"]}; {CurrentPlayer.SuperAbilities[1]}: {CurrentPlayer.SuperAbilities[2]};");
             Console.WriteLine();
@@ -47,19 +47,19 @@ public class NewGame {
             int rn = r.Next(0, 6);
             Console.WriteLine($"{CurrentPlayer.Name} draws {rn}!");
             CurrentPlayer.Position += rn;
-            if (CurrentPlayer.Position > board.Fields) {
+            if (CurrentPlayer.Position > board.Fields) { // sprawdzenie, czy pozycja wykracza poza wielkość planszy, jeśli tak, to pomniejsza pozycję o wielkość planszy (efekt zapętlenia planszy)
                 CurrentPlayer.Position -= board.Fields;
             }
             Console.WriteLine($"Current position: Field {CurrentPlayer.Position}");
-            if (board.BonusFields.Contains(CurrentPlayer.Position)) {
+            if (board.BonusFields.Contains(CurrentPlayer.Position)) { // sprawdzenie czy dane pole jest bonusowe
                 Console.WriteLine("Bonus Field!");
                 
-                Dictionary<string, double> PlayerAbilities = CurrentPlayer.Abilities;
+                Dictionary<string, double> PlayerAbilities = CurrentPlayer.Abilities; // pobiera umiejętności gracza
 
                 Random q = new();
                 int w = q.Next(1, 4);
-                if (CurrentPlayer.Abilities["Shield"] > 25) {
-                    
+                if (CurrentPlayer.Abilities["Shield"] > 25) { // jeśli tarcza chroni ponad 25% obrażeń, nie może ona być dalej ulepszana
+                    w = 1;
                 }
                 string AbilityName;
                 switch(w) {
@@ -98,37 +98,37 @@ public class NewGame {
                 Console.WriteLine($"Ability {FullName} upgraded from {Ability} to {dd}");
                 Random p = new();
                 int pp = p.Next(1, 6);
-                Player.UpdatePlayer addPts = CurrentPlayer.UpdatePoints;
+                Player.UpdatePlayer addPts = CurrentPlayer.UpdatePoints; // tu jest ten cały delegat (można to było zrobić 100x łatwiej, ale po co?)
                 addPts(pp, "add");
                 Console.WriteLine($"Collected {pp} points! You have {CurrentPlayer.Points} points now!");
             }
 
-            List<string> PlayersInRange = Player.GetPlayersByPosition(CurrentPlayer.Position - 5, CurrentPlayer.Position + 5);
-            PlayersInRange.RemoveAll(pl => pl == CurrentPlayer.Name);
+            List<string> PlayersInRange = Player.GetPlayersByPosition(CurrentPlayer.Position - 5, CurrentPlayer.Position + 5); // pobranie wszystkich graczy (poza sobą oczywiście), którzy znajdują się 5 pól w obie strony od ciebie
+            PlayersInRange.RemoveAll(pl => pl == CurrentPlayer.Name); // tutaj usuwam samego siebie (no bo po co miałbym zaatakować siebie?)
             Console.WriteLine();
-            if (PlayersInRange.Count == 0) {
+            if (PlayersInRange.Count == 0) { // to się dzieje, jeśli nie można nikogo zaatakować
                 Console.WriteLine("Cannot attack any player.");
-            } else if (PlayersInRange.Count == 1) {
+            } else if (PlayersInRange.Count == 1) { // a tutaj automatyczny atak, jeśli jest do wyboru tylko jedna osoba
                 Player AttackedPlayer = Player.Players.Find(pl1 => pl1.Name == PlayersInRange[0]);
                 Player.UpdatePlayer update = AttackedPlayer.UpdateHealth;
-                double attack = CurrentPlayer.Abilities["Attack"];
-                if (CurrentPlayer.Abilities["Attack"] < 0) {
+                double attack = CurrentPlayer.Abilities["Attack"]; // pobranie ataku gracza
+                if (CurrentPlayer.Abilities["Attack"] < 0) { // jeśli gracz ma atak poniżej 0 (może się tak zdarzyć), to wogóle nie zaatakuje (ma go uleczyć?)
                     attack = 0;
                 }
-                if (CurrentPlayer.SuperAbilities.Contains("AttackMultiply")) {
+                if (CurrentPlayer.SuperAbilities.Contains("AttackMultiply")) { // ewentualnie jak jest wojownikiem i ma zwiększacz ataku razy x to się mnoży
                     if (Convert.ToDouble(CurrentPlayer.SuperAbilities[2]) > 0) {
                         attack *= Convert.ToDouble(CurrentPlayer.SuperAbilities[2]);
                     }
-                }
+                } // a jak jest goblinem (czy innym karłem albo elfem) to dodatkowy atak ma
                 if (CurrentPlayer.SuperAbilities.Contains("SuperAttack")) {
-                    if (Convert.ToDouble(CurrentPlayer.SuperAbilities[2]) > 0) {
+                    if (Convert.ToDouble(CurrentPlayer.SuperAbilities[2]) > 0) { // no i też oczywiście, jeśli jest większy od 0 (nie leczymy przeciwników, to głupie)
                         attack += Convert.ToDouble(CurrentPlayer.SuperAbilities[2]);
                     }
                 }
-                update(attack, "remove");
+                update(attack, "remove"); // znowu ten delegat (kto projektował to zadanie?)
                 Console.WriteLine($"Player {AttackedPlayer.Name} has been attacked (has {AttackedPlayer.Health} HP left)!");
             } else {
-                Console.Write("Which player do you want to attack? ");
+                Console.Write("Which player do you want to attack? "); // a jak jest 2 lub więcej przeciwników do wyboru to można wybrać
                 foreach (var l in PlayersInRange) {
                     Console.Write($"{l} ");
                 }
@@ -136,7 +136,7 @@ public class NewGame {
                 string target;
                 if (PlayersInRange.Contains(choice)) {
                     target = choice;
-                } else {
+                } else { // chyba że nie umiesz pisać i zrobiłeś literówkę, wtedy C# wybierze za ciebie
                     Random x = new();
                     int xx = x.Next(0, PlayersInRange.Count);
                     target = PlayersInRange[xx];
@@ -144,34 +144,34 @@ public class NewGame {
                 Player AttackedPlayer = Player.Players.Find(pl1 => pl1.Name == target);
                 Player.UpdatePlayer update = AttackedPlayer.UpdateHealth;
                 double attack = CurrentPlayer.Abilities["Attack"];
-                if (CurrentPlayer.Abilities["Attack"] < 0) {
+                if (CurrentPlayer.Abilities["Attack"] < 0) { // no i znowu sprawdzanie, czy atak jest większy od 0
                     attack = 0;
                 }
-                if (CurrentPlayer.SuperAbilities.Contains("AttackMultiply")) {
+                if (CurrentPlayer.SuperAbilities.Contains("AttackMultiply")) { // i znowu sprawdzenie, czy jest mnożnik ataku
                     if (Convert.ToDouble(CurrentPlayer.SuperAbilities[2]) > 0) {
                         attack *= Convert.ToDouble(CurrentPlayer.SuperAbilities[2]);
                     }
                 }
-                if (CurrentPlayer.SuperAbilities.Contains("SuperAttack")) {
-                    if (Convert.ToDouble(CurrentPlayer.SuperAbilities[2]) > 0) {
+                if (CurrentPlayer.SuperAbilities.Contains("SuperAttack")) { // i czy jest dodatkowy atak
+                    if (Convert.ToDouble(CurrentPlayer.SuperAbilities[2]) > 0) { // i czy wynosi on więcej niż 0
                         attack += Convert.ToDouble(CurrentPlayer.SuperAbilities[2]);
                     }
                 }
-                update(attack, "remove");
+                update(attack, "remove"); // mam dosyć delegatów
                 Console.WriteLine($"Player {AttackedPlayer.Name} has been attacked (has {AttackedPlayer.Health} HP left)!");
             }
-            if (Player.Players.Count == 1) {
+            if (Player.Players.Count == 1) { // jeśli został 1 gracz to gra się kończy
                 win = true;
                 winner = Player.Players[0].Name;
                 Console.WriteLine("--------------------");
                 Console.ReadKey();
                 current += 1;
-                break;
+                break; // koniec pętli
             }
             
-            if (CurrentPlayer.SuperAbilities.Contains("Cast")) {
+            if (CurrentPlayer.SuperAbilities.Contains("Cast")) { // jeśli jesteś magiem, to zmniejszysz czyjeś umiejętności (właśnie tak można mieć atak poniżej 0)
                 if (Convert.ToDouble(CurrentPlayer.SuperAbilities[2]) > 0) {
-                    Console.Write("Who do you want to cast spell on? ");
+                    Console.Write("Who do you want to cast spell on? "); // i znowu jest wybór
                     foreach (var l in PlayersExceptYou) {
                         Console.Write($"{l} ");
                     }
@@ -185,7 +185,7 @@ public class NewGame {
                         targetSpell = PlayersExceptYou[yy];
                     }
                 
-                    Player Spelled = Player.Players.Find(pl2 => pl2.Name == targetSpell);
+                    Player Spelled = Player.Players.Find(pl2 => pl2.Name == targetSpell); // i tutaj wybieramy gracza, na którego rzucamy klątwę (ja wybieram użytkowników Linuxa)
                     double range = Convert.ToDouble(CurrentPlayer.SuperAbilities[2]);
                     Random rr = new();
                     int rrr = rr.Next(1, 4);
@@ -210,7 +210,7 @@ public class NewGame {
                 }
             }
             
-            if (CurrentPlayer.SuperAbilities.Contains("Heal")) {
+            if (CurrentPlayer.SuperAbilities.Contains("Heal")) { // i tutaj można się uleczyć, jeśli jesteś leczycielem
                 if (Convert.ToDouble(CurrentPlayer.SuperAbilities[2]) > 0) {
                     Player.UpdatePlayer heal = CurrentPlayer.UpdateHealth;
                     heal(Convert.ToDouble(CurrentPlayer.SuperAbilities[2]), "add");
@@ -218,17 +218,17 @@ public class NewGame {
                 }
             }
 
-            if (CurrentPlayer.SuperAbilities.Contains("Shoot")) {
-                if (PlayersExceptYou.Count == 1) {
+            if (CurrentPlayer.SuperAbilities.Contains("Shoot")) { // a tutaj, jeśli masz umiejętność strzelania (niestety nazwisko Strzelecki nie gwarantuje tej umiejętności), to możesz w kogoś strzelić (bez względu na to, gdzie jest)
+                if (PlayersExceptYou.Count == 1) { // no i znowu, jeśli jest jedna osoba, to nie ma wyboru
                     Player AttackedPlayer3 = Player.Players.Find(pl3 => pl3.Name == PlayersExceptYou[0]);
                     Player.UpdatePlayer update3 = AttackedPlayer3.UpdateHealth;
                     double attack3 = Convert.ToDouble(CurrentPlayer.SuperAbilities[2]);
                     if (attack3 < 0) {
                         attack3 = 0;
                     }
-                    update3(attack3, "remove");
+                    update3(attack3, "remove"); // nienawidzę delegatów, co to ma być wogóle
                     Console.WriteLine($"Player {AttackedPlayer3.Name} has been shot (has {AttackedPlayer3.Health} HP left)!");
-                } else {
+                } else { // a tutaj już jest wybór
                     Console.Write("Which player do you want to attack? ");
                     foreach (var l in PlayersExceptYou) {
                         Console.Write($"{l} ");
@@ -248,10 +248,10 @@ public class NewGame {
                     if (attack3 < 0) {
                         attack3 = 0;
                     }
-                    update3(attack3, "remove");
+                    update3(attack3, "remove"); // ile jeszcze tych delegatów będzie
                     Console.WriteLine($"Player {AttackedPlayer3.Name} has been shot (has {AttackedPlayer3.Health} HP left)!");
                 }
-                if (Player.Players.Count == 1) {
+                if (Player.Players.Count == 1) { // i znowu, jeśli jedna osoba zostanie to koniec gry
                     win = true;
                     winner = Player.Players[0].Name;
                     Console.WriteLine("--------------------");
@@ -261,18 +261,18 @@ public class NewGame {
                 }
             }
             
-            if (Player.Players.Count == 1) {
+            if (Player.Players.Count == 1) { // i tu chyba znowu koniec gry
                 win = true;
                 winner = Player.Players[0].Name;
             }
             Console.WriteLine("--------------------");
             Console.ReadKey();
-            current += 1;
+            current += 1; // przejście do następnego gracza
         }
 
-        Console.ForegroundColor = ConsoleColor.White;
+        Console.ForegroundColor = ConsoleColor.White; // zmiana koloru w konsoli na biały
         Console.WriteLine("--------------------");
-        Console.WriteLine($"{winner} wins the game! Score: {Player.Players[0].Points}");
+        Console.WriteLine($"{winner} wins the game! Score: {Player.Players[0].Points}"); // ogłoszenie zwycięzcy (emocjonująca chwila)
         Console.WriteLine("--------------------");
 
         Console.ReadKey();
