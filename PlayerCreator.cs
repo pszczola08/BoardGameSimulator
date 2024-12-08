@@ -4,8 +4,14 @@ class Player {
     public string Name;
     public int Position;
     public string Type;
-    public int Points;
-    public int Health;
+    public double Points;
+    private double _Health;
+
+    public double Health {
+        get { return Math.Round(_Health, 1); }
+        set { _Health = Math.Round(_Health, 1); }
+    }
+    public ConsoleColor Color;
     public Dictionary<string, double> Abilities;
     public List<object> SuperAbilities;
     public static List<Player> Players { get; set; } = new();
@@ -14,7 +20,11 @@ class Player {
         this.Name = Name;
         Position = 1;
         Points = 0;
-        Health = 100;
+        _Health = 100;
+        
+        Random col = new Random();
+        Array colors = Enum.GetValues(typeof(ConsoleColor));
+        Color = (ConsoleColor)colors.GetValue(col.Next(colors.Length));
         
         Random rand = new();
         int Rnd = rand.Next(1, 6);
@@ -36,7 +46,7 @@ class Player {
                     { "Shield", 4.0 }
                 };
                 SuperAbilities = new() {
-                    "Cast", "Spell Casting", 3.0
+                    "Cast", "Spell Casting", 0.1
                 };
                 break;
             case 3:
@@ -46,7 +56,7 @@ class Player {
                     { "Shield", 4.0 }
                 };
                 SuperAbilities = new() {
-                    "Heal", "Healing", 5.0 
+                    "Heal", "Healing", 0.1 
                 };
                 break;
             case 4:
@@ -73,9 +83,9 @@ class Player {
         Console.WriteLine($"Player {this.Name} ({Type}) was added!");
     }
 
-    public delegate void UpdatePlayer(int number, string addOrRemove);
+    public delegate void UpdatePlayer(double number, string addOrRemove);
 
-    public void UpdatePoints(int number, string addOrRemove) {
+    public void UpdatePoints(double number, string addOrRemove) {
         if (addOrRemove == "add") {
             Points += number;
         } else if (addOrRemove == "remove") {
@@ -84,11 +94,11 @@ class Player {
             Console.WriteLine($"\n ---------- \n Error! Cannot execute action \" {addOrRemove} \" on Player! \n ---------- \n");
         }
     }
-    public void UpdateHealth(int number, string addOrRemove) {
+    public void UpdateHealth(double number, string addOrRemove) {
         if (addOrRemove == "add") {
-            Health += number;
+            _Health += number;
         } else if (addOrRemove == "remove") {
-            Health -= number;
+            _Health -= number * ((100 - Abilities["Shield"]) / 100);
         } else {
             Console.WriteLine($"\n ---------- \n Error! Cannot execute action \" {addOrRemove} \" on Player! \n ---------- \n");
         }
@@ -105,6 +115,15 @@ class Player {
             if (x.Position >= min && x.Position <= max) {
                 names.Add(x.Name);
             }
+        }
+
+        return names;
+    }
+
+    public static List<string> GetAllPlayers() {
+        List<string> names = new();
+        foreach (var x in Players) {
+            names.Add(x.Name);
         }
 
         return names;

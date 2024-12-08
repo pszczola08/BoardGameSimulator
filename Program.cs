@@ -9,7 +9,7 @@ class Program {
         
         Console.Write("Number of fields in the board: ");
         string? fields = Console.ReadLine();
-        Console.Write("Percentage of bosun fields in the board: ");
+        Console.Write("Percentage of bonus fields in the board: ");
         string? percentage = Console.ReadLine();
         int finalFld = 100;
         int finalPrc = 10;
